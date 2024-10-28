@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en" data-bs-theme="auto">
+  <head>
+    <script src="../assets/js/color-modes.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.122.0">
+    <title>QR Generate</title>
+    <head>
+        <link rel="icon" type="image/png" href="nongqr-removebg-preview.png">
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/sign-in/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@docsearch/css@3">
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+      /* CSS ที่คุณให้มา */
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+      html, body {
+        height: 100%;
+      }
+      .INPUTLINK {
+        max-width: 330px;
+        padding: 1rem;
+      }
+      .INPUTLINK .form-floating:focus-within {
+        z-index: 2;
+      }
+      .INPUTLINK input[type="link"] {
+        margin-bottom: -1px;
+        border-bottom-right-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+
+      /* จัด QR Code ให้อยู่ตรงกลาง */
+      .qr-container {
+        margin-top: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* ปุ่มดาวน์โหลด */
+      #downloadBtn {
+        margin-top: 20px;
+        display: none; /* ซ่อนไว้ก่อนจนกว่าจะสร้าง QR Code */
+      }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+  </head>
+  <body class="d-flex align-items-center py-4 bg-body-tertiary">
+    <main class="INPUTLINK w-100 m-auto">
+      <form id="qrForm">
+        <center><img src="nongqr-removebg-preview.png" width="200" height="250"></center>
+        <center><h1 class="h3 mb-3 fw-normal">QrGenBigToo</h1></center>
+
+        <div class="form-floating">
+          <input type="text" class="form-control" id="floatingInput" placeholder="name@example.com">
+          <label for="floatingInput">Please input the link here</label>
+        </div>
+        <button class="btn btn-primary w-100 py-2" type="submit">Generate</button>
+      </form>
+
+      <div id="qrcode" class="qr-container"></div>
+
+      <!-- ปุ่มดาวน์โหลด QR Code -->
+      <center><button id="downloadBtn" class="btn btn-success">Download QR Code</button></center>
+
+    </main>
+
+    <script>
+      document.getElementById('qrForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // ป้องกันการรีเฟรชหน้า
+        const inputLink = document.getElementById('floatingInput').value;
+
+        // ตรวจสอบว่าผู้ใช้กรอกลิงก์หรือไม่
+        if (inputLink.trim() !== "") {
+          // ล้าง QR Code ก่อนหน้าหากมี
+          document.getElementById('qrcode').innerHTML = "";
+
+          // สร้าง QR Code
+          const qrCode = new QRCode(document.getElementById("qrcode"), {
+            text: inputLink,
+            width: 128,
+            height: 128,
+          });
+
+          // รอให้ QR Code ถูกสร้างเสร็จก่อนแสดงปุ่มดาวน์โหลด
+          setTimeout(function() {
+            const qrCanvas = document.querySelector("#qrcode canvas");
+            if (qrCanvas) {
+              // แสดงปุ่มดาวน์โหลด
+              document.getElementById('downloadBtn').style.display = "block";
+
+              // เมื่อคลิกปุ่มดาวน์โหลด
+              document.getElementById('downloadBtn').addEventListener('click', function() {
+                const qrImage = qrCanvas.toDataURL("image/png");
+                const link = document.createElement('a');
+                link.href = qrImage;
+                link.download = "qrcode.png";
+                link.click();
+              });
+            }
+          }, 300); // รอให้ QR Code ถูกเรนเดอร์เสร็จ
+        } else {
+          alert("Please input a valid link!");
+        }
+      });
+    </script>
+
+    <script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
